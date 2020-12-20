@@ -3,6 +3,9 @@
 #include <vector>
 #include <functional>
 
+// 2. ADD well forming
+// 3. draw each layer in python script
+
 class Point {
 public: 
 	Point() = default;
@@ -37,6 +40,8 @@ public:
 
 class Grid {
 public: 
+	int division;
+	int k;
 	int NWx;
 	int NWy;
 	int NWz;
@@ -60,6 +65,10 @@ public:
 
 	void input() {
 		std::fstream fin(R"(grid.txt)");
+		// Read division amount:
+		fin >> division;
+		k = pow(2, division - 1);
+
 		// Read information about XY main plane
 		fin >> NWx >> NWy;
 		pointsMain.resize(NWx * NWy);
@@ -77,9 +86,9 @@ public:
 			int amount;
 			double coef;
 			fin >> amount >> coef;
-			divisionsX[i] = Division(amount, coef);
+			divisionsX[i] = Division(amount * k, (coef > 0 ? pow(coef, 1.0 / k) : -pow(-coef, 1.0 / k)));
 			IX[i] = sizeWithDivisionX;
-			sizeWithDivisionX += amount;
+			sizeWithDivisionX += amount * k;
 		}
 		IX[IX.size() - 1] = sizeWithDivisionX;
 		sizeWithDivisionX += 1;
@@ -92,9 +101,9 @@ public:
 			int amount;
 			double coef;
 			fin >> amount >> coef;
-			divisionsY[i] = Division(amount, coef);
+			divisionsY[i] = Division(amount * k, (coef > 0 ? pow(coef, 1.0 / k) : -pow(-coef, 1.0 / k)));
 			IY[i] = sizeWithDivisionY;
-			sizeWithDivisionY += amount;
+			sizeWithDivisionY += amount * k;
 		}
 		IY[IY.size() - 1] = sizeWithDivisionY;
 		sizeWithDivisionY += 1;
