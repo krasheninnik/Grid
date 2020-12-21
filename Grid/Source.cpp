@@ -6,6 +6,7 @@
 // 2. ADD well forming
 // 3. draw each layer in python script
 
+
 class Point {
 public: 
 	Point() = default;
@@ -142,7 +143,6 @@ public:
 			fin >> area >> x0 >> x1 >> y0 >> y1 >> z0 >> z1;
 			areas[i] = Area(area, x0, x1, y0, y1, z0, z1);
 		}
-		std::cout << areas.size();
 
 		// forming grid with division:
 		points.resize(sizeWithDivisionX * sizeWithDivisionY);
@@ -230,6 +230,27 @@ public:
 		// set last Z axis point;
 		zAxis[zAxis.size() - 1] = zAxisMain[zAxisMain.size() - 1];
 
+
+		// Output files
+		std::fstream foutPoints("points.txt");
+		std::fstream foutElems("elems.txt");
+
+		//std::fstream fout("outputXYplane.txt");
+		foutElems << (sizeWithDivisionX - 1) * (sizeWithDivisionY - 1) * (sizeWithDivisionZ - 1) << std::endl;
+		foutPoints << sizeWithDivisionX *  sizeWithDivisionY  * sizeWithDivisionZ << std::endl;
+
+		// Output points:
+		for (int zi = 0; zi < zAxis.size(); zi++) {
+			for (int yi = 0; yi < sizeWithDivisionY; yi++) {
+				for (int xi = 0; xi < sizeWithDivisionX; xi++) {
+					foutPoints << points[yi * sizeWithDivisionX + xi].x <<
+						" " << points[yi * sizeWithDivisionX + xi].y <<
+						" " << zAxis[zi] << std::endl;
+				}
+			}
+		}
+
+		int pointsInXY = sizeWithDivisionX * sizeWithDivisionY;
 		// Find's elems area:
 		for (int zi = 0; zi < zAxis.size() - 1; zi++) {
 			for (int yi = 0; yi < sizeWithDivisionY - 1; yi++) {
@@ -247,11 +268,23 @@ public:
 							break;
 						}
 					}
+					
 					// do some calculations for finite elem 
-					std::cout << "area: " << areaNum << std::endl;
+					//std::cout << "area: " << areaNum << std::endl;
+
+					// like example, output it:
+					foutElems << areaNum << 
+						" " << zi * pointsInXY + yi * sizeWithDivisionX + xi <<
+						" " << zi * pointsInXY + yi * sizeWithDivisionX + xi + 1 <<
+						" " << zi * pointsInXY + (yi + 1) * sizeWithDivisionX + xi <<
+						" " << zi * pointsInXY + (yi + 1) * sizeWithDivisionX + xi + 1 <<
+						" " << (zi + 1) * pointsInXY + yi * sizeWithDivisionX + xi <<
+						" " << (zi + 1) * pointsInXY + yi * sizeWithDivisionX + xi + 1 <<
+						" " << (zi + 1) * pointsInXY + (yi + 1) * sizeWithDivisionX + xi <<
+						" " << (zi + 1) * pointsInXY + (yi + 1) * sizeWithDivisionX + xi + 1 << std::endl;
 				}
 			}
-		}
+		}	
 	}
 
 
