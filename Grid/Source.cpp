@@ -3,10 +3,6 @@
 #include <vector>
 #include <functional>
 
-// 2. ADD well forming
-// 3. draw each layer in python script
-
-
 class Point {
 public: 
 	Point() = default;
@@ -64,7 +60,7 @@ public:
 	std::vector<Division> divisionsY;
 	std::vector<Division> divisionsZ;
 
-	void input() {
+	void processing() {
 		std::fstream fin(R"(grid.txt)");
 		// Read division amount:
 		fin >> division;
@@ -270,8 +266,6 @@ public:
 					}
 					
 					// do some calculations for finite elem 
-					//std::cout << "area: " << areaNum << std::endl;
-
 					// like example, output it:
 					foutElems << areaNum << 
 						" " << zi * pointsInXY + yi * sizeWithDivisionX + xi <<
@@ -286,21 +280,10 @@ public:
 			}
 		}	
 	}
-
-
-	void output() {
-		// Output XY main plane
-		std::fstream fout("output.txt");
-		fout << sizeWithDivisionX << " " << sizeWithDivisionY << std::endl;
-		for (auto p: points) {
-			fout << p.x << " " << p.y << std::endl;
-		}
-	}
 };
 
 
 int main() {
 	Grid g;
-	g.input();
-	g.output();
+	g.processing();
 }
